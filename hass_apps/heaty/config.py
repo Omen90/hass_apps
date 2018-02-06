@@ -95,7 +95,7 @@ TEMP_EXPRESSION_SCHEMA = vol.Schema(str)
 
 # This schema does no real validation and default value insertion,
 # it just ensures a dictionary containing dictionaries is returned.
-DICT_IN_DICT_SCHEMA = vol.Schema(vol.All(
+DICTS_IN_DICT_SCHEMA = vol.Schema(vol.All(
     lambda v: v or {},
     {
         vol.Extra: lambda v: v or {},
@@ -184,8 +184,8 @@ ROOM_SCHEMA = vol.Schema(vol.All(
         vol.Optional("replicate_changes", default=True): bool,
         vol.Optional("reschedule_delay", default=0):
             vol.All(int, vol.Range(min=0)),
-        vol.Optional("thermostats", default=dict): DICT_IN_DICT_SCHEMA,
-        vol.Optional("window_sensors", default=dict): DICT_IN_DICT_SCHEMA,
+        vol.Optional("thermostats", default=dict): DICTS_IN_DICT_SCHEMA,
+        vol.Optional("window_sensors", default=dict): DICTS_IN_DICT_SCHEMA,
         vol.Optional("schedule", default=lambda: build_schedule([])):
             SCHEDULE_SCHEMA,
     },

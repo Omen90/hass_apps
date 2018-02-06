@@ -5,6 +5,7 @@ Utility functions that are used everywhere inside Heaty.
 import datetime
 import re
 import time
+import typing as T
 
 
 # matches any character that is not allowed in Python variable names
@@ -15,7 +16,7 @@ RANGE_PATTERN = re.compile(r"^(\d+)\-(\d+)$")
 TIME_FORMAT = "%H:%M"
 
 
-def escape_var_name(name):
+def escape_var_name(name: str) -> str:
     """Converts the given string to a valid Python variable name.
     All unsupported characters are replaced by "_". If name would
     start with a digit, "_" is put infront."""
@@ -26,7 +27,7 @@ def escape_var_name(name):
         name = "_" + name
     return name
 
-def expand_range_string(range_string):
+def expand_range_string(range_string: T.Union[float, int, str]) -> T.Set[int]:
     """Expands strings of the form '1,2-4,9,11-12 to set(1,2,3,4,9,11,12).
     Any whitespace is ignored. If a float or int is given instead of a
     string, a set containing only that, converted to int, is returned."""
@@ -44,7 +45,10 @@ def expand_range_string(range_string):
             numbers.add(int(part))
     return numbers
 
-def build_date_from_constraint(constraint, default_date, direction=0):
+def build_date_from_constraint(
+        constraint: T.Dict[str, int], default_date: datetime.date,
+        direction: int = 0
+    ) -> datetime.date:
     """Builds and returns a datetime.date object from the given constraint,
     taking missing values from the given default_date.
     In case the date is not valid (e.g. 2017-02-29), a ValueError is
@@ -81,13 +85,15 @@ def build_date_from_constraint(constraint, default_date, direction=0):
                 fields["month"] = 1
                 fields["year"] += 1
 
-def format_time(when, format_str=TIME_FORMAT):
+def format_time(when: datetime.time, format_str: str = TIME_FORMAT) -> str:
     """Returns a string representing the given datetime.time object.
     If no strftime-compatible format is provided, the default is used."""
 
     return when.strftime(format_str)
 
-def parse_time_string(time_str, format_str=TIME_FORMAT):
+def parse_time_string(
+        time_str: str, format_str: str = TIME_FORMAT
+    ) -> datetime.time:
     """Parses a string of the given strptime-compatible format
     into a datetime.time object. If the string has an invalid
     format, None is returned. If no format is provided, the default

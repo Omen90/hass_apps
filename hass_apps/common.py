@@ -2,6 +2,8 @@
 Common helpers and functionality used by all apps.
 """
 
+import typing as T
+
 try:
     from appdaemon.plugins.hass import hassapi
 except ImportError:
@@ -33,7 +35,7 @@ class App(AppBase):
         version = "0.0.0"
         config_schema = None
 
-    def log(self, msg, level="INFO"):
+    def log(self, msg: str, level: str = "INFO"):
         """Wrapper around Appdaemon.log() which changes the log level
         from DEBUG to INFO if debug config option is enabled."""
 
@@ -41,7 +43,7 @@ class App(AppBase):
             level = "INFO"
         return super(App, self).log(msg, level=level)
 
-    def initialize(self):
+    def initialize(self) -> None:
         """Parses the configuration and logs that initialization
         started/finished. The real work should be done in
         initialize_inner()."""
@@ -59,13 +61,13 @@ class App(AppBase):
 
         self.log("--- Initialization done")
 
-    def initialize_inner(self):
+    def initialize_inner(self) -> None:
         """Overwrite this stub to do the real initialization of the
         particular app."""
 
         pass
 
-    def set_app_state(self, entity_id, state):
+    def set_app_state(self, entity_id: str, state: T.Any) -> None:
         """A wrapper to make the new appdaemon.AppDaemon.set_app_state
         available under the appdaemon 2 interface."""
 
